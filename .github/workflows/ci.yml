@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-lite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - name: Install base + dev dependencies
+        run: uv sync --extra dev
+      - name: Lint with ruff
+        run: uv run ruff check src tests
+      - name: Run pytest (lite profile)
+        run: uv run pytest -v
